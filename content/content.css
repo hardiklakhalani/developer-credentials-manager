@@ -1,0 +1,207 @@
+/* content/content.css — Styles injected into every page */
+
+/* ── Wrapper ────────────────────────────────────────────── */
+.dcm-wrapper {
+  position: relative !important;
+  display: inline-block;
+  width: 100%;
+}
+
+/* ── Trigger button (icon inside the field) ─────────────── */
+.dcm-trigger {
+  position: absolute !important;
+  top: 50% !important;
+  right: 6px !important;
+  transform: translateY(-50%) !important;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  z-index: 2147483646 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 3px !important;
+  opacity: 0.7;
+  transition: opacity 0.15s ease, background 0.15s ease !important;
+  line-height: 1 !important;
+}
+
+.dcm-trigger:hover {
+  opacity: 1 !important;
+  background: rgba(46, 125, 50, 0.12) !important;
+}
+
+.dcm-trigger img {
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  pointer-events: none !important;
+}
+
+/* ── Dropdown container ─────────────────────────────────── */
+#dcm-dropdown {
+  display: none;
+  position: absolute !important;
+  z-index: 2147483647 !important;
+  width: 260px;
+  min-width: 200px;
+  max-width: 380px;
+  background: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 13px !important;
+  color: #212121 !important;
+  overflow: hidden !important;
+  animation: dcm-fade-in 0.15s ease !important;
+}
+
+@keyframes dcm-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Dropdown header ────────────────────────────────────── */
+.dcm-dropdown-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 12px 8px !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+  background: #f9fbe7 !important;
+}
+
+.dcm-dropdown-logo {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.dcm-dropdown-title {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  color: #2e7d32 !important;
+  text-transform: uppercase !important;
+}
+
+/* ── Search input ───────────────────────────────────────── */
+.dcm-search-wrap {
+  padding: 8px 10px 6px !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.dcm-search {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 5px 9px !important;
+  border: 1px solid #dde !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  outline: none !important;
+  color: #333 !important;
+  background: #fafafa !important;
+  transition: border-color 0.15s !important;
+}
+
+.dcm-search:focus {
+  border-color: #4caf50 !important;
+  background: #fff !important;
+}
+
+/* ── Item list ──────────────────────────────────────────── */
+.dcm-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+  max-height: 180px !important;
+  overflow-y: auto !important;
+}
+
+.dcm-list::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+.dcm-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.dcm-list::-webkit-scrollbar-thumb {
+  background: #ccc !important;
+  border-radius: 4px !important;
+}
+
+.dcm-item {
+  padding: 8px 14px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  transition: background 0.1s ease !important;
+  color: #333 !important;
+  font-size: 13px !important;
+}
+
+.dcm-item:hover {
+  background: #e8f5e9 !important;
+  color: #1b5e20 !important;
+}
+
+/* ── Empty state ────────────────────────────────────────── */
+.dcm-empty {
+  padding: 14px 14px !important;
+  text-align: center !important;
+  color: #888 !important;
+  font-size: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.dcm-empty-link {
+  color: #2e7d32 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+
+.dcm-empty-link:hover {
+  text-decoration: underline !important;
+}
+
+/* ── No Match Instant Add ───────────────────────────────── */
+.dcm-no-match {
+  padding: 8px 10px !important;
+  border-top: 1px solid #f0f0f0 !important;
+  background: #f9fbe7 !important;
+  text-align: center !important;
+}
+
+.dcm-add-instant-btn {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 8px 12px !important;
+  background: #2e7d32 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-family: inherit !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
+}
+
+.dcm-add-instant-btn:hover {
+  background: #1b5e20 !important;
+}
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Credentials Manager</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="popup-header">
+    <img src="../icons/icon32.png" alt="DCM Logo" class="popup-logo" />
+    <div class="popup-brand">
+      <span class="popup-name">Dev Credentials</span>
+      <span class="popup-sub">Manager</span>
+    </div>
+  </header>
+
+  <section class="stats-row">
+    <div class="stat-card" id="stat-emails">
+      <span class="stat-count" id="count-emails">0</span>
+      <span class="stat-label">Emails</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-card" id="stat-passwords">
+      <span class="stat-count" id="count-passwords">0</span>
+      <span class="stat-label">Passwords</span>
+    </div>
+  </section>
+
+  <section class="quick-add">
+    <p class="quick-add-label">Quick Add</p>
+
+    <div class="quick-add-row">
+      <input
+        type="text"
+        id="quick-email-input"
+        class="quick-input"
+        placeholder="Add an email address…"
+        autocomplete="off"
+      />
+      <button class="quick-btn" id="quick-email-btn" aria-label="Add email">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="quick-add-row">
+      <input
+        type="text"
+        id="quick-pass-input"
+        class="quick-input"
+        placeholder="Add a password…"
+        autocomplete="off"
+      />
+      <button class="quick-btn" id="quick-pass-btn" aria-label="Add password">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="quick-feedback" class="quick-feedback" hidden></div>
+  </section>
+
+  <footer class="popup-footer">
+    <button class="open-options-btn" id="open-options-btn">
+      ⚙️ &nbsp;Open Full Settings
+    </button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — Developer Credentials Manager</title>
+  <meta name="description" content="Manage your developer email and password credential lists." />
+  <link rel="stylesheet" href="options.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+</head>
+<body>
+
+  <!-- ── Sidebar ─────────────────────────────────────────── -->
+  <aside class="sidebar" role="navigation" aria-label="Settings navigation">
+    <div class="sidebar-brand">
+      <img src="../icons/icon48.png" alt="DCM Logo" class="brand-logo" />
+      <div>
+        <div class="brand-name">Dev Credentials</div>
+        <div class="brand-sub">Manager</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="emails" id="nav-emails">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        Emails
+        <span class="nav-badge" id="badge-emails">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="passwords" id="nav-passwords">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="5" y="9" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 9V6.5a3 3 0 116 0V9" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        Passwords
+        <span class="nav-badge" id="badge-passwords">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="importexport" id="nav-importexport">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Import / Export
+      </button>
+    </nav>
+  </aside>
+
+  <!-- ── Main content ───────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ── Emails tab ──────────────────────────────────── -->
+    <section class="tab-panel active" id="tab-emails" role="tabpanel" aria-labelledby="nav-emails">
+      <header class="panel-header">
+        <h1 class="panel-title">Email Addresses</h1>
+        <p class="panel-desc">These appear as suggestions in email input fields on any website.</p>
+      </header>
+      <div class="list-toolbar">
+        <input type="text" class="search-bar" id="search-emails" placeholder="🔍  Search emails…" autocomplete="off" />
+      </div>
+      <ul class="cred-list" id="list-emails" aria-label="Email list"></ul>
+      <div class="add-row">
+        <input type="text" id="add-email-input" class="add-input" placeholder="New email address…" autocomplete="off" />
+        <button class="add-btn" id="add-email-btn">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add
+        </button>
+      </div>
+      <div class="empty-state" id="empty-emails" hidden>
+        <div class="empty-icon">📭</div>
+        <p class="empty-title">No emails yet</p>
+        <p class="empty-sub">Add your first email above to get started.</p>
+      </div>
+    </section>
+
+    <!-- ── Passwords tab ───────────────────────────────── -->
+    <section class="tab-panel" id="tab-passwords" role="tabpanel" aria-labelledby="nav-passwords">
+      <header class="panel-header">
+        <h1 class="panel-title">Passwords</h1>
+        <p class="panel-desc">These appear as suggestions in password input fields on any website.</p>
+      </header>
+      <div class="list-toolbar">
+        <input type="text" class="search-bar" id="search-passwords" placeholder="🔍  Search passwords…" autocomplete="off" />
+      </div>
+      <ul class="cred-list" id="list-passwords" aria-label="Password list"></ul>
+      <div class="add-row">
+        <input type="text" id="add-pass-input" class="add-input" placeholder="New password…" autocomplete="off" />
+        <button class="add-btn" id="add-pass-btn">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add
+        </button>
+      </div>
+      <div class="empty-state" id="empty-passwords" hidden>
+        <div class="empty-icon">🔑</div>
+        <p class="empty-title">No passwords yet</p>
+        <p class="empty-sub">Add your first password above to get started.</p>
+      </div>
+    </section>
+
+    <!-- ── Import / Export tab ─────────────────────────── -->
+    <section class="tab-panel" id="tab-importexport" role="tabpanel" aria-labelledby="nav-importexport">
+      <header class="panel-header">
+        <h1 class="panel-title">Import / Export</h1>
+        <p class="panel-desc">Back up your lists or restore them on another device.</p>
+      </header>
+
+      <div class="ie-cards">
+        <div class="ie-card">
+          <div class="ie-card-icon">⬆️</div>
+          <h2 class="ie-card-title">Export</h2>
+          <p class="ie-card-desc">Download all your emails and passwords as a <code>.json</code> file.</p>
+          <button class="ie-btn primary" id="export-btn">Download JSON</button>
+        </div>
+
+        <div class="ie-card">
+          <div class="ie-card-icon">⬇️</div>
+          <h2 class="ie-card-title">Import</h2>
+          <p class="ie-card-desc">Load a previously exported JSON file.</p>
+          <div class="import-mode-row">
+            <label class="mode-label">
+              <input type="radio" name="import-mode" value="replace" checked /> Replace existing lists
+            </label>
+            <label class="mode-label">
+              <input type="radio" name="import-mode" value="merge" /> Merge with existing lists
+            </label>
+          </div>
+          <label class="ie-btn secondary file-label" for="import-file-input">
+            Choose JSON File
+            <input type="file" id="import-file-input" accept=".json" hidden />
+          </label>
+          <div id="import-status" class="import-status" hidden></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>
