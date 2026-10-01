@@ -62,8 +62,15 @@
 }
 
 @keyframes dcm-fade-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Dropdown header ────────────────────────────────────── */
@@ -205,3 +212,317 @@
   background: #1b5e20 !important;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────── */
+/* ── Credential Set Picker — Dropdown (/auth/signin) ────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+/* Outer wrapper — relative so the panel can anchor to it */
+.dcm-set-picker-wrap {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 8px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* ── Trigger button (looks like a styled <select>) ───────────────────────── */
+.dcm-set-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 7px 10px !important;
+  border: 1.5px solid #a5d6a7 !important;
+  border-radius: 8px !important;
+  background: #f9fbe7 !important;
+  cursor: pointer !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+  animation: dcm-fade-in 0.18s ease !important;
+}
+
+.dcm-set-trigger:hover {
+  border-color: #4caf50 !important;
+  background: #f1f8e9 !important;
+}
+
+.dcm-set-trigger--open,
+.dcm-set-trigger:focus-visible {
+  border-color: #2e7d32 !important;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15) !important;
+  background: #fff !important;
+  outline: none !important;
+}
+
+/* Left side: logo + placeholder text */
+.dcm-set-trigger-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+.dcm-set-picker-logo {
+  width: 14px !important;
+  height: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+.dcm-set-trigger-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #555 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Right side: context badge + chevron */
+.dcm-set-trigger-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  margin-left: 6px !important;
+}
+
+/* Context badge: "yourdomain.desku.io" */
+.dcm-set-picker-context {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  color: #558b2f !important;
+  background: #dcedc8 !important;
+  padding: 2px 7px !important;
+  border-radius: 20px !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
+}
+
+/* Animated chevron */
+.dcm-set-trigger-chevron {
+  color: #2e7d32 !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease !important;
+}
+
+.dcm-set-trigger--open .dcm-set-trigger-chevron {
+  transform: rotate(180deg) !important;
+}
+
+/* ── Floating panel ───────────────────────────────────────────────────────── */
+.dcm-set-panel {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1.5px solid #a5d6a7 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13), 0 2px 8px rgba(46, 125, 50, 0.08) !important;
+  overflow: hidden !important;
+  animation: dcm-fade-in 0.15s ease !important;
+}
+
+.dcm-set-panel[hidden] {
+  display: none !important;
+}
+
+.dcm-set-options-list {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.dcm-set-options-list::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.dcm-set-options-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.dcm-set-options-list::-webkit-scrollbar-thumb {
+  background: #c8e6c9 !important;
+  border-radius: 4px !important;
+}
+
+/* ── Option rows ─────────────────────────────────────────────────────────── */
+.dcm-set-option {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 8px 10px !important;
+  border-bottom: 1px solid #f1f8e9 !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+  transition: background 0.1s ease !important;
+}
+
+.dcm-set-option:last-child {
+  border-bottom: none !important;
+}
+
+.dcm-set-option:hover {
+  background: #f1f8e9 !important;
+}
+
+.dcm-set-option-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  text-align: left !important;
+}
+
+.dcm-set-option-copy-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin-left: 6px !important;
+  border: 1px solid #c8e6c9 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #2e7d32 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease !important;
+}
+
+.dcm-set-option-copy-btn:hover {
+  background: #e8f5e9 !important;
+  border-color: #81c784 !important;
+  transform: scale(1.05) !important;
+}
+
+.dcm-set-option-copy-btn--copied {
+  background: #2e7d32 !important;
+  border-color: #2e7d32 !important;
+  color: #ffffff !important;
+}
+
+/* Top line: label + role badge */
+.dcm-set-option-main {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+}
+
+.dcm-set-option-label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #212121 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Role badge */
+.dcm-set-option-role {
+  display: inline-block !important;
+  padding: 1px 7px !important;
+  border-radius: 20px !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  flex-shrink: 0 !important;
+}
+
+.dcm-role-customer {
+  background: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.dcm-role-agent {
+  background: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.dcm-role-tenant {
+  background: #fff3e0 !important;
+  color: #e65100 !important;
+}
+
+/* Bottom line: email · masked-password */
+.dcm-set-option-creds {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.dcm-set-option-email {
+  font-size: 11px !important;
+  color: #616161 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 62% !important;
+}
+
+.dcm-set-option-sep {
+  font-size: 11px !important;
+  color: #bdbdbd !important;
+  flex-shrink: 0 !important;
+}
+
+.dcm-set-option-pass {
+  font-size: 11px !important;
+  color: #9e9e9e !important;
+  letter-spacing: 0.08em !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.dcm-set-options-empty {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 14px !important;
+  font-size: 12px !important;
+  color: #757575 !important;
+}
+
+/* ── Persistent Panel Footer ─────────────────────────────────────────────── */
+.dcm-set-panel-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding: 8px 12px !important;
+  background: #f9fbe7 !important;
+  border-top: 1px solid #c8e6c9 !important;
+}
+
+.dcm-set-options-settings-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #2e7d32 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.dcm-set-options-settings-link:hover {
+  background: #e8f5e9 !important;
+  color: #1b5e20 !important;
+  text-decoration: none !important;
+}

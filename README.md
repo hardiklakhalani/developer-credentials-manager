@@ -15,6 +15,7 @@ A light-themed, premium Chrome extension designed for developers to manage and e
 - **📂 JSON Import / Export:** Easily backup your configuration or sync it across development machines by importing/exporting JSON.
 - **🔄 Sync-Ready:** Uses `chrome.storage.sync` to keep your dev credentials synchronized across your Google account devices automatically.
 - **💻 SPA Support:** Actively detects dynamic inputs on Single Page Applications (React, Vue, Angular, etc.) using `MutationObserver` and triggers synthetic events to properly update framework form state.
+- **🎲 Random Dummy Data Filler:** Right-click on any text input or textarea field to access the "Fill Dummy Data" context menu. Select any configured set (e.g. Address, Phone, Short Paragraph, Long Multi Paragraphs) to inject a randomly selected entry instantly.
 
 ---
 
@@ -23,22 +24,27 @@ A light-themed, premium Chrome extension designed for developers to manage and e
 ```
 developer-credentials-manager/
 ├── manifest.json              # Extension metadata (Manifest V3)
-├── background.js              # Service Worker (background handlers)
+├── background.js              # Service Worker (context menus & navigation)
 ├── icon.png                   # Source icon asset
 ├── icons/                     # Resized extension icons (16px, 32px, 48px, 128px)
 ├── shared/
+│   ├── env.js                 # Environment configuration & URL matchers
 │   └── storage.js             # Storage operations wrapper for chrome.storage.sync
 ├── content/
-│   ├── content.js             # Field scanning, DOM injection & dropdown logic
-│   └── content.css            # Scoped trigger and floating UI styles
+│   ├── content.js             # Field scanning, DOM injection, context menu filler
+│   ├── content.css            # Scoped trigger and floating UI styles
+│   └── interceptor.js         # Main world network interceptor
 ├── popup/
 │   ├── popup.html             # Extension toolbar popup
-│   ├── popup.js               # Quick-add and status counts
+│   ├── popup.js               # Quick-add, dummy sets stats, and tab shortcuts
 │   └── popup.css              # Toolbar UI styles
-└── options/
-    ├── options.html           # Full settings page
-    ├── options.js             # Drag-and-drop, inline-editing, and import/export UI
-    └── options.css            # Dashboard styles
+├── options/
+│   ├── options.html           # Full settings page with Dummy Data tab
+│   ├── options.js             # Dummy sets manager, inline-editing, import/export
+│   └── options.css            # Dashboard styles
+├── CONTEXT.md                 # Domain glossary and ubiquitous language
+└── docs/
+    └── adr/                   # Architecture Decision Records
 ```
 
 ---
@@ -61,13 +67,20 @@ developer-credentials-manager/
 - Click the icon to view suggestions.
 - Select a suggestion to autofill the input.
 
-### 2. Search & Instant Add
+### 2. Random Dummy Data Filler
+- Right-click inside any editable text input, textarea, or rich-text editor on any web page.
+- Hover over **Fill Dummy Data** in the browser context menu.
+- Click any configured Dummy Data Set (e.g., **Address**, **Phone**, **Short Paragraph**, **Long Multi Paragraphs**).
+- A randomly chosen entry from that set will immediately replace the field's contents and trigger synthetic change events for React/Vue SPA compatibility.
+- Configure or create new sets anytime under **Settings → Dummy Data**.
+
+### 3. Search & Instant Add
 - While the suggestions dropdown is open, start typing to filter suggestions.
 - If there are no matches, click **`+ Add "[your text]"`** to instantly add the credential to your list and fill the field.
 
-### 3. Settings Dashboard
+### 4. Settings Dashboard
 - Click the extension toolbar icon and select **Open Full Settings** (or right-click the extension icon and select **Options**).
-- Double-click/click on any item to edit it inline, drag by the handle (`⠿`) to reorder suggestions, or delete items you no longer need.
+- Manage Credential Sets, Emails, Passwords, and Dummy Data Sets with drag-and-drop, inline editing, and sample data seeding.
 
 ---
 

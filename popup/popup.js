@@ -7,11 +7,28 @@
 
 // ─── Storage helpers (inline, since content scripts can't share modules directly) ──
 
-const KEYS = { EMAILS: 'dcm_emails', PASSWORDS: 'dcm_passwords' };
+const KEYS = {
+  EMAILS: 'dcm_emails',
+  PASSWORDS: 'dcm_passwords',
+  DUMMY_DATA_SETS: 'dcm_dummy_data_sets',
+};
 
 function getList(key) {
+  if (key === KEYS.DUMMY_DATA_SETS) {
+    return new Promise((resolve) => {
+      chrome.storage.local.get({ [key]: null }, (localRes) => {
+        if (localRes && Array.isArray(localRes[key])) {
+          resolve(localRes[key]);
+        } else {
+          chrome.storage.sync.get({ [key]: [] }, (syncRes) => {
+            resolve((syncRes && syncRes[key]) || []);
+          });
+        }
+      });
+    });
+  }
   return new Promise((resolve) => {
-    chrome.storage.sync.get({ [key]: [] }, (r) => resolve(r[key]));
+    chrome.storage.sync.get({ [key]: [] }, (r) => resolve((r && r[key]) || []));
   });
 }
 
@@ -25,6 +42,7 @@ function saveList(key, arr) {
 
 const countEmails    = document.getElementById('count-emails');
 const countPasswords = document.getElementById('count-passwords');
+const countDummySets = document.getElementById('count-dummysets');
 const emailInput     = document.getElementById('quick-email-input');
 const passInput      = document.getElementById('quick-pass-input');
 const emailBtn       = document.getElementById('quick-email-btn');
@@ -45,8 +63,10 @@ function showFeedback(msg, isError = false) {
 async function refreshCounts() {
   const emails    = await getList(KEYS.EMAILS);
   const passwords = await getList(KEYS.PASSWORDS);
+  const dummySets = await getList(KEYS.DUMMY_DATA_SETS);
   countEmails.textContent    = emails.length;
   countPasswords.textContent = passwords.length;
+  if (countDummySets) countDummySets.textContent = dummySets.length;
 }
 
 // ─── Event Handlers ──────────────────────────────────────────────────────────
@@ -79,6 +99,22 @@ passInput.addEventListener('keydown',  (e) => { if (e.key === 'Enter') passBtn.c
 
 openOptionsBtn.addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
+});
+
+// Clickable stat cards navigate directly to respective options tabs
+document.getElementById('stat-emails')?.addEventListener('click', () => {
+  chrome.runtime.sendMessage({ action: 'openOptions', tab: 'emails' });
+  window.close();
+});
+
+document.getElementById('stat-passwords')?.addEventListener('click', () => {
+  chrome.runtime.sendMessage({ action: 'openOptions', tab: 'passwords' });
+  window.close();
+});
+
+document.getElementById('stat-dummysets')?.addEventListener('click', () => {
+  chrome.runtime.sendMessage({ action: 'openOptions', tab: 'dummysets' });
+  window.close();
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────

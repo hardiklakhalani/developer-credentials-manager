@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Developer Credentials Manager",
   "short_name": "DevCreds",
-  "version": "1.0.0",
-  "description": "Quickly fill email and password fields from your personal developer credential lists.",
+  "version": "2.0.0",
+  "description": "Quickly fill email and password fields from your developer credential lists, with environment-aware credential set auto-fill on sign-in pages.",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -11,7 +11,8 @@
     "128": "icons/icon128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -33,9 +34,19 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content.js"],
+      "js": ["content/interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true,
+      "match_about_blank": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["shared/env.js", "content/content.js"],
       "css": ["content/content.css"],
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
     }
   ],
   "web_accessible_resources": [
@@ -44,7 +55,8 @@
         "icons/icon16.png",
         "icons/icon32.png",
         "icons/icon48.png",
-        "icons/icon128.png"
+        "icons/icon128.png",
+        "content/interceptor.js"
       ],
       "matches": ["<all_urls>"]
     }

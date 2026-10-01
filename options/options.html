@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Settings — Developer Credentials Manager</title>
-  <meta name="description" content="Manage your developer email and password credential lists." />
+  <meta name="description" content="Manage your developer email, password, and credential set lists." />
   <link rel="stylesheet" href="options.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 </head>
+
 <body>
 
   <!-- ── Sidebar ─────────────────────────────────────────── -->
@@ -22,10 +24,20 @@
     </div>
 
     <nav class="sidebar-nav">
-      <button class="nav-item active" data-tab="emails" id="nav-emails">
+      <button class="nav-item active" data-tab="credsets" id="nav-credsets">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="3" y="5" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5" />
+          <path d="M7 5V4a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        Credential Sets
+        <span class="nav-badge" id="badge-credsets">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="emails" id="nav-emails">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" />
+          <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" />
         </svg>
         Emails
         <span class="nav-badge" id="badge-emails">0</span>
@@ -33,17 +45,27 @@
 
       <button class="nav-item" data-tab="passwords" id="nav-passwords">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <rect x="5" y="9" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M7 9V6.5a3 3 0 116 0V9" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="5" y="9" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M7 9V6.5a3 3 0 116 0V9" stroke="currentColor" stroke-width="1.5" />
         </svg>
         Passwords
         <span class="nav-badge" id="badge-passwords">0</span>
       </button>
 
+      <button class="nav-item" data-tab="dummysets" id="nav-dummysets">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+          <path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        Dummy Data
+        <span class="nav-badge" id="badge-dummysets">0</span>
+      </button>
+
       <button class="nav-item" data-tab="importexport" id="nav-importexport">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M4 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M4 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
         Import / Export
       </button>
@@ -53,8 +75,91 @@
   <!-- ── Main content ───────────────────────────────────── -->
   <main class="main-content">
 
+    <!-- ── Credential Sets tab ───────────────────────────── -->
+    <section class="tab-panel active" id="tab-credsets" role="tabpanel" aria-labelledby="nav-credsets">
+      <header class="panel-header">
+        <h1 class="panel-title">Credential Sets</h1>
+        <p class="panel-desc">Named email + password pairs scoped to a specific backend server. Shown as a quick-fill
+          dropdown on <code>/auth/signin</code> pages.</p>
+      </header>
+
+      <div class="credset-list" id="list-credsets" aria-label="Credential sets list"></div>
+
+      <div class="empty-state" id="empty-credsets" hidden>
+        <div class="empty-icon">🔐</div>
+        <p class="empty-title">No credential sets yet</p>
+        <p class="empty-sub">Add your first set below, or load sample data to get started quickly.</p>
+        <button class="ie-btn secondary" id="seed-credsets-btn" style="margin-top:10px;">⚗️ Load sample data</button>
+      </div>
+
+      <!-- ── Add Set form ─────────────────────────────────── -->
+      <div class="credset-add-form" id="credset-add-form">
+        <div class="credset-add-form-title-row">
+          <h2 class="form-section-title">Add a New Set</h2>
+          <button class="seed-btn-inline" id="seed-credsets-btn-inline" title="Seed a few sample entries for testing">⚗️
+            Sample data</button>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <label class="form-label" for="cs-label">Label <span class="req">*</span></label>
+            <input type="text" id="cs-label" class="add-input" placeholder="e.g. Agent X" autocomplete="off" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="cs-role">Role <span class="req">*</span></label>
+            <select id="cs-role" class="add-input add-select">
+              <option value="" disabled selected>Select role…</option>
+              <option value="customer">Customer</option>
+              <option value="agent">Agent</option>
+              <option value="tenant">Tenant</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="cs-tld">Environment <span class="req">*</span></label>
+            <select id="cs-tld" class="add-input add-select">
+              <option value="" disabled selected>Select environment…</option>
+              <option value=".desku.io">Production (.desku.io)</option>
+              <option value=".desku.dev">Development (.desku.dev)</option>
+              <option value=".desku.local">Local (.desku.local)</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="cs-subdomain">Subdomain <span class="req">*</span></label>
+            <input type="text" id="cs-subdomain" class="add-input" placeholder="e.g. yourdomain" autocomplete="off" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="cs-email">Email <span class="req">*</span></label>
+            <input type="text" id="cs-email" class="add-input" placeholder="agent@example.com" autocomplete="off" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="cs-password">Password <span class="req">*</span></label>
+            <div class="password-input-wrap">
+              <input type="password" id="cs-password" class="add-input" placeholder="Password…" autocomplete="off" />
+              <button type="button" class="input-eye-btn" id="toggle-cs-password-btn"
+                aria-label="Toggle password visibility" title="Show password">👁️</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row">
+          <button class="add-btn" id="add-credset-btn">
+            <svg viewBox="0 0 20 20" fill="none">
+              <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Add Set
+          </button>
+          <div id="credset-feedback" class="quick-feedback" hidden></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Emails tab ──────────────────────────────────── -->
-    <section class="tab-panel active" id="tab-emails" role="tabpanel" aria-labelledby="nav-emails">
+    <section class="tab-panel" id="tab-emails" role="tabpanel" aria-labelledby="nav-emails">
       <header class="panel-header">
         <h1 class="panel-title">Email Addresses</h1>
         <p class="panel-desc">These appear as suggestions in email input fields on any website.</p>
@@ -66,7 +171,9 @@
       <div class="add-row">
         <input type="text" id="add-email-input" class="add-input" placeholder="New email address…" autocomplete="off" />
         <button class="add-btn" id="add-email-btn">
-          <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
           Add
         </button>
       </div>
@@ -84,13 +191,16 @@
         <p class="panel-desc">These appear as suggestions in password input fields on any website.</p>
       </header>
       <div class="list-toolbar">
-        <input type="text" class="search-bar" id="search-passwords" placeholder="🔍  Search passwords…" autocomplete="off" />
+        <input type="text" class="search-bar" id="search-passwords" placeholder="🔍  Search passwords…"
+          autocomplete="off" />
       </div>
       <ul class="cred-list" id="list-passwords" aria-label="Password list"></ul>
       <div class="add-row">
         <input type="text" id="add-pass-input" class="add-input" placeholder="New password…" autocomplete="off" />
         <button class="add-btn" id="add-pass-btn">
-          <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
           Add
         </button>
       </div>
@@ -112,7 +222,8 @@
         <div class="ie-card">
           <div class="ie-card-icon">⬆️</div>
           <h2 class="ie-card-title">Export</h2>
-          <p class="ie-card-desc">Download all your emails and passwords as a <code>.json</code> file.</p>
+          <p class="ie-card-desc">Download all your emails, passwords, and credential sets as a <code>.json</code> file.
+          </p>
           <button class="ie-btn primary" id="export-btn">Download JSON</button>
         </div>
 
@@ -137,8 +248,49 @@
       </div>
     </section>
 
+    <!-- ── Dummy Data Sets tab ───────────────────────────── -->
+    <section class="tab-panel" id="tab-dummysets" role="tabpanel" aria-labelledby="nav-dummysets">
+      <header class="panel-header">
+        <h1 class="panel-title">Dummy Data Sets</h1>
+        <p class="panel-desc">Manage custom sets of dummy data (e.g. Address, Phone, Long Content). Right-click on any text field or textarea to randomly fill an entry from these sets.</p>
+      </header>
+
+      <div class="list-toolbar">
+        <input type="text" class="search-bar" id="search-dummysets" placeholder="🔍  Search dummy sets…" autocomplete="off" />
+      </div>
+
+      <div class="credset-list" id="list-dummysets" aria-label="Dummy data sets list"></div>
+
+      <div class="empty-state" id="empty-dummysets" hidden>
+        <div class="empty-icon">🎲</div>
+        <p class="empty-title">No dummy data sets yet</p>
+        <p class="empty-sub">Add your first set below, or load sample data to get started quickly.</p>
+        <button class="ie-btn secondary" id="seed-dummysets-btn" style="margin-top:10px;">⚗️ Load sample data</button>
+      </div>
+
+      <!-- ── Add Set form ─────────────────────────────────── -->
+      <div class="credset-add-form" id="dummyset-add-form">
+        <div class="credset-add-form-title-row">
+          <h2 class="form-section-title">Add a New Set</h2>
+          <button class="seed-btn-inline" id="seed-dummysets-btn-inline" title="Seed sample dummy sets (Address, Phone, Paragraphs)">⚗️ Sample data</button>
+        </div>
+
+        <div class="add-row">
+          <input type="text" id="add-dummyset-input" class="add-input" placeholder="Set name (e.g. Address, Long Content)…" autocomplete="off" />
+          <button class="add-btn" id="add-dummyset-btn">
+            <svg viewBox="0 0 20 20" fill="none">
+              <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Add Set
+          </button>
+        </div>
+        <div id="dummyset-feedback" class="quick-feedback" hidden></div>
+      </div>
+    </section>
+
   </main>
 
   <script src="options.js"></script>
 </body>
+
 </html>
